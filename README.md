@@ -46,7 +46,7 @@ Open [http://localhost:8080](http://localhost:8080) to access the server in the 
 
 
 
-To use Kakao Login API, you have to register and get your own API key in [Kakao Developers](https://developers.kakao.com/product/kakaoLogin). You should provide valid client id, client secret and redirect uri in src/main/resources/appliction-dev.yml as following. **You can still run the server without registering and using Kakao API.**
+To use Kakao Login API, you have to register and get your own API key in [Kakao Developers](https://developers.kakao.com/product/kakaoLogin). You should provide valid client id, client secret and redirect uri in src/main/resources/appliction-dev.yml as following. **You can still run the server without registering and using Kakao Login API.**
 
 ```sh
 spring:
