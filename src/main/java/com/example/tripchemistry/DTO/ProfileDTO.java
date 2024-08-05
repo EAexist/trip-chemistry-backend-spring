@@ -90,7 +90,7 @@ public class ProfileDTO  {
         private TestAnswerDTO testAnswer;  
 
         public TestAnswer ( Profile profile ){
-            this.testAnswer = profile.getTestAnswer() == null ? null : new TestAnswerDTO( profile.getTestAnswer() );
+            this.testAnswer = new TestAnswerDTO( profile.getTestAnswer() );
         }
     }
 }

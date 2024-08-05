@@ -4,4 +4,5 @@ spring:
             client:
                 registration:
                     kakao:
-                        redirect-uri: https://trip-chemistry.vercel.app/login/kakaoAuthRedirect
+                        redirect-uri: https://trip-chemistry-1-0.vercel.app/login/kakaoAuthRedirect
+                        # redirect-uri: https://trip-chemistry.vercel.app/login/kakaoAuthRedirectgit stat

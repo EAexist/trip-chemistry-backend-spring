@@ -1,28 +1,24 @@
 package com.example.tripchemistry.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.Collections;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tripchemistry.DTO.ChemistryDTO;
-import com.example.tripchemistry.DTO.ProfileDTO;
 import com.example.tripchemistry.model.Chemistry;
 import com.example.tripchemistry.model.Profile;
 import com.example.tripchemistry.model.TestAnswer;
-import com.example.tripchemistry.model.answer.CityChemistry;
 import com.example.tripchemistry.repository.ChemistryRepository;
 import com.example.tripchemistry.repository.ProfileRepository;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -82,7 +78,7 @@ public class ChemistryService {
 		return chemistryMono.map(Chemistry::getId)
 				.flatMap(chemistryId -> this.joinChemistryHelper(userId, chemistryId))
 				.map(it -> {
-					log.info(String.format("[createSampleChemistry]\tnew Chemistry=%s", it.toString()));
+					// log.info(String.format("[createSampleChemistry]\tnew Chemistry=%s", it.toString()));
 					return it;
 				})
 				.flatMap(it -> profileRepository.findById(userId));
@@ -142,7 +138,7 @@ public class ChemistryService {
 				/* Save the new profile. This saves to repository and updates to MongoDB. */
 				.flatMap(profileRepository::save)
 				.map(profile -> {
-					log.info(String.format("[joinChemistry]\tnew Profile=%s", profile));
+					// log.info(String.format("[joinChemistry]\tnew Profile=%s", profile));
 					return profile;
 				});
 
@@ -154,7 +150,7 @@ public class ChemistryService {
 				// updatedProfileMono.zipWith(chemistryMono, (a, b) -> b)
 				chemistryMono
 						.map(it -> {
-							log.info(String.format("[joinChemistry]\tchemistry=%s", it.toString()));
+							// log.info(String.format("[joinChemistry]\tchemistry=%s", it.toString()));
 							return it;
 						})
 						.filterWhen(chemistry -> Mono.just(!chemistry.getProfileIdList().contains(userId)))
@@ -167,7 +163,7 @@ public class ChemistryService {
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.map(it -> {
-					log.info(String.format("[joinChemistry]\tprofile=%s", it.toString()));
+					// log.info(String.format("[joinChemistry]\tprofile=%s", it.toString()));
 					return it;
 				})
 				.zipWith(updatedChemistryMono, (a, b) -> b)
@@ -248,43 +244,37 @@ public class ChemistryService {
 		log.info(String.format("[generateChemistry]\t(before update)\tchemistry=%s", chemistry.toString()));
 
 		List<String> idList = chemistry.getProfileIdList();
-		Flux<Profile> profiles = profileRepository.findAllTestResultWithNicknameById(idList).map(it ->{
-			log.info(String.format("[generateChemistry]\tprofiles=%s", it.toString()));
-			return it;
-		});
+		Flux<Profile> profiles = profileRepository.findAllTestResultWithNicknameById(idList);
 		// Mono<List<String>> leaderList =
 		// profileRepository.findLeaderAll(idList).collectList();
-		// Mono<Map<String, Float>> city = profileRepository.getCityChemistry(idList);
+		Mono<Map<String, Float>> city = profileRepository.getCityChemistry(idList);
 		Mono<Map<String, List<String>>> schedule = getScheduleChemistry(profiles);
 		Mono<Map<String, List<String>>> restaurant = getRestaurantChemistry(profiles);
 		// Mono<List<String>> budgetChemistryText = getBudgetChemistry(profiles);
 
-		return profiles
-				.collectList()
-				.map(it -> { log.info(String.format("[getScheduleChemistry]\tprofiles=%s", it.toString())); return it; })
+		return Mono.just(idList)
 				.filter(it -> it.size() > 1)
-				.flatMap(it ->
+				.then(
 					Mono.zip(
-						// city, 
+						city, 
 						schedule,
 						restaurant
 					)
 				)
 				.map(it -> {
-					// chemistry.setCity(it.getT1());
+					chemistry.setCity(it.getT1());
 					chemistry.setIdLists(Map.of(
-						"busy", it.getT1().get("busy"),
-						"relaxing", it.getT1().get("relaxing"),
-						"lowDailyRestaurantBudget", it.getT2().get("lowDailyRestaurantBudget"),
-						"highDailyRestaurantBudget", it.getT2().get("highDailyRestaurantBudget")
+						"busy", it.getT2().get("busy"),
+						"relaxing", it.getT2().get("relaxing"),
+						"lowDailyRestaurantBudget", it.getT3().get("lowDailyRestaurantBudget"),
+						"highDailyRestaurantBudget", it.getT3().get("highDailyRestaurantBudget")
 					));
 					// chemistry.setSchedule(it.getT3());
 					// chemistry.setBudgetChemistryText(it.getT4());
 					log.info(String.format("[generateChemistry]\t(after update)\tchemistry=%s",
 							chemistry.toString()));
 					return chemistry;
-				})
-				.defaultIfEmpty(chemistry);
+				});
 		// .flatMap(chemistryRepository::save)
 		// .subscribe();
 		// }
@@ -350,7 +340,6 @@ public class ChemistryService {
 
 		Mono<Double> averageHoursMono = activeHoursFlux
 				.collectList()
-				.map(it ->{ log.info(String.format("[getScheduleChemistry]\tactiveHoursFlux=%s", it.toString())); return it; })
 				.map(it -> it.stream().mapToInt(v -> v).average().getAsDouble());
 
 		Flux<Tuple3<String, Integer, Double>> activeHoursProfileFlux = Flux.zip(idList, activeHoursFlux, averageHoursMono.cache().repeat());

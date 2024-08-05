@@ -52,7 +52,7 @@ class AuthControllerReactive {
 
     /* 게스트 로그인 */
     @GetMapping("/guest/login")
-    Mono<ResponseEntity<LoginResultDTO>> guestLogin(@RequestParam("id") String id) {
+    Mono<ResponseEntity<ProfileDTO>> guestLogin(@RequestParam("id") String id) {
         log.info(String.format("GET /profile/guest"));
         return authService.guestLogin( id );
     }
@@ -69,8 +69,8 @@ class AuthControllerReactive {
                     authService.kakaoLogin(it, body.get("id"))
                 );
         return response.map(it -> {
-            log.info(String.format("[AuthController.kakaoLogin] returns loginResultDTO=%s",
-                    ((LoginResultDTO) it.getBody()).toString()));
+            // log.info(String.format("[AuthController.kakaoLogin] returns loginResultDTO=%s",
+            //         ((LoginResultDTO) it.getBody()).toString()));
             return it;
         });
     }
@@ -83,8 +83,8 @@ class AuthControllerReactive {
         Mono<ResponseEntity<ProfileDTO>> response = authService.kakaoLoginByAccesssToken(body.get("accessToken"));
 
         return response.map(it -> {
-            log.info(String.format("[AuthController.kakaoLogin] returns loginResultDTO=%s",
-                    ((ProfileDTO) it.getBody()).toString()));
+            // log.info(String.format("[AuthController.kakaoLogin] returns loginResultDTO=%s",
+            //         ((ProfileDTO) it.getBody()).toString()));
             return it;
         });
     }

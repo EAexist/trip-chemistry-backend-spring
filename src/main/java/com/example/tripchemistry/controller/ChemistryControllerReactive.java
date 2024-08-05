@@ -2,7 +2,6 @@
 // https://velog.io/@leejinagood/%EC%86%8C%EC%85%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
 package com.example.tripchemistry.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -15,13 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripchemistry.DTO.ChemistryDTO;
-import com.example.tripchemistry.model.Chemistry;
 import com.example.tripchemistry.service.ChemistryService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
-import java.time.Duration;
 
 @RestController
 @RequestMapping("/chemistry")

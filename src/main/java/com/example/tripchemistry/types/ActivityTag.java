@@ -12,7 +12,7 @@ public enum ActivityTag {
     MARKET(8),
     HOTEL(9),
     VLOG(10),
-    EAT(11),
+    WAITING(11),
     BAR(12),
     CAFE(13),
     SHOPPING(14),

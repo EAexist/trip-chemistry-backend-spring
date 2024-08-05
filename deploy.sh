@@ -5,7 +5,7 @@
 docker build -t test .
 
 # Tag Docker Image
-docker tag test:latest eaexists/tripchemistry:host
+docker tag test:latest eaexists/tripchemistry:0.1
 
 # Push Docker Image to dockerhub repository
-docker push eaexists/tripchemistry:host
+docker push eaexists/tripchemistry:0.1

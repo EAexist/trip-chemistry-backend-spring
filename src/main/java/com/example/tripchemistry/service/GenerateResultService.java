@@ -1,5 +1,6 @@
 package com.example.tripchemistry.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +20,6 @@ import com.example.tripchemistry.model.TestResult;
 import com.example.tripchemistry.repository.ProfileRepository;
 import com.example.tripchemistry.types.ActivityTag;
 import com.example.tripchemistry.types.CharacterId;
-import com.example.tripchemistry.types.CityTag;
 import com.example.tripchemistry.types.ExpectationTag;
 import com.example.tripchemistry.types.TripTag;
 import com.mongodb.client.result.UpdateResult;
@@ -47,7 +47,7 @@ public class GenerateResultService {
             Map.entry(ExpectationTag.COMFORT, Arrays.asList(TripTag.REST)),
             Map.entry(ExpectationTag.ADVENTURE, Arrays.asList(TripTag.ADVENTURE)),
             Map.entry(ExpectationTag.NEW, Arrays.asList(TripTag.ADVENTURE, TripTag.PASSION)),
-            Map.entry(ExpectationTag.DIGITAL_DETOX, Arrays.asList(TripTag.REFRESH, TripTag.REST)),
+            Map.entry(ExpectationTag.DIGITAL_DETOX, Arrays.asList(TripTag.REFRESH)),
             Map.entry(ExpectationTag.REST, Arrays.asList(TripTag.REST)),
             Map.entry(ExpectationTag.VIEW, Arrays.asList(TripTag.ADVENTURE)),
             Map.entry(ExpectationTag.FRIENDSHIP, Arrays.asList(TripTag.FRIENDSHIP)));
@@ -64,12 +64,11 @@ public class GenerateResultService {
             Map.entry(ActivityTag.MARKET, Arrays.asList(TripTag.ADVENTURE)),
             Map.entry(ActivityTag.HOTEL, Arrays.asList(TripTag.REST)),
             Map.entry(ActivityTag.VLOG, Arrays.asList(TripTag.INFLUENCER)),
-            Map.entry(ActivityTag.EAT, Arrays.asList(TripTag.EAT)),
+            Map.entry(ActivityTag.WAITING, Arrays.asList(TripTag.EAT)),
             Map.entry(ActivityTag.BAR, Arrays.asList(TripTag.EAT)),
             Map.entry(ActivityTag.CAFE, Arrays.asList(TripTag.EAT, TripTag.COFFEE)),
             Map.entry(ActivityTag.SHOPPING, Arrays.asList()),
-            Map.entry(ActivityTag.SHOW, Arrays.asList(TripTag.CULTURE)),
-            Map.entry(ActivityTag.MUSEUM, Arrays.asList(TripTag.CULTURE)));
+            Map.entry(ActivityTag.SHOW, Arrays.asList(TripTag.CULTURE)));
 
     private List<TripTag> tripTagFrequencyList = Stream
             .concat(expectationToTripTagMap.values().stream(), activityToTripTagMap.values().stream())
@@ -93,7 +92,7 @@ public class GenerateResultService {
 
         return Mono.zip(tripTaglist, characterResult)
                 .map(
-                        it -> new TestResult(it.getT1(), it.getT2(), new HashMap()));
+                        it -> new TestResult(it.getT1(), it.getT2(), new ArrayList<String>()));
     }
 
     /* 여행 성향 태그 계산 */
@@ -150,19 +149,15 @@ public class GenerateResultService {
                 + (testAnswer.getSchedule().get("schedule") <= 2 ? 3 - testAnswer.getSchedule().get("schedule") : 0));
 
         map.put(CharacterId.panda, (tripTagList.contains(TripTag.EAT) ? 1f : 0f) * (
-                // + ((tripTagList.contains(TripTag.COFFEE) ? 1 : 0))
+                + ((tripTagList.contains(TripTag.COFFEE) ? 1 : 0))
                 // + (testAnswer.getRestaurant().get("dailyBudget") >= 12000 ? (testAnswer.getRestaurant().get("dailyBudget") - 12000) / 4000 : 0)
-                + (testAnswer.getRestaurant().get("specialBudget") >= 40000 ? testAnswer.getRestaurant().get("specialBudget") / 20000 - 1 : 0)
-                // + (testAnswer.getRestaurant().get("specialCount") / 2 )
+                + (testAnswer.getRestaurant().get("specialBudget") >= 40000 ? testAnswer.getRestaurant().get("specialBudget") / 80000 + 1 : 0)
+                + (testAnswer.getRestaurant().get("specialCount") / 2 )
                 )
                 );
 
         map.put(CharacterId.racoon, (tripTagList.contains(TripTag.CULTURE) ? 1 : 0f)
-                + (testAnswer.getHashtag().get("activity").contains(ActivityTag.SHOPPING.getValue()) ? 1 : 0f )
-                + (testAnswer.getHashtag().get("city").contains(CityTag.LOUD.getValue()) ? 1 : 0f )
-                + (testAnswer.getHashtag().get("city").contains(CityTag.MODERN.getValue()) ? 1 : 0f )
-                );
-                // + (testAnswer.getCity().get("metropolis") > 3 ? testAnswer.getCity().get("metropolis") - 2 : 0));
+                + (testAnswer.getCity().get("metropolis") > 3 ? testAnswer.getCity().get("metropolis") - 2 : 0));
 
         Comparator<Entry<CharacterId, Float>> comparator = new Comparator<Entry<CharacterId, Float>>() {
             @Override
@@ -177,13 +172,10 @@ public class GenerateResultService {
     }
 
     /* 여행지 계산 */
-//     @Transactional
-//     public Mono<Map<String, Float>> generateCityResult(TestAnswer testAnswer) {
-//         return Mono.just(Arrays.asList("shiretoko", "biei", "tokyo", "kyoto"));
-//         return(
-//                 Map<String, Float>
-//         )
-//     }
+    @Transactional
+    public Mono<List<String>> generateCityGroup(Mono<List<TripTag>> tripTagList) {
+        return Mono.just(Arrays.asList("shiretoko", "biei", "tokyo", "kyoto"));
+    }
     
     private Boolean assertWasAckowledged(UpdateResult updateResult) {
         assert updateResult.wasAcknowledged();

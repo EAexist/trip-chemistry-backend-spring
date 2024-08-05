@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.tripchemistry.model.Profile;
-import com.example.tripchemistry.model.answer.CityChemistry;
 import com.mongodb.client.result.UpdateResult;
 
 import reactor.core.publisher.Flux;
@@ -25,7 +24,7 @@ public interface ProfileDAL {
     
     public Flux<Profile> findAllTestResultWithNicknameById( List<String> idList );
 
-    // public Mono<Map<String, Float>> getCityChemistry( List<String> idList );
+    public Mono<Map<String, Float>> getCityChemistry( List<String> idList );
     // public Mono<CityChemistry> getCityChemistry( List<String> idList );
 
     

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tripchemistry.DTO.ProfileDTO;
-import com.example.tripchemistry.DTO.TestAnswerDTO;
 import com.example.tripchemistry.DTO.TestResultDTO;
 import com.example.tripchemistry.model.Chemistry;
 import com.example.tripchemistry.model.Profile;
@@ -90,24 +89,6 @@ public class TestDataService {
                     log.info(String.format("[setNickname]\tprofileDTO=%s", it.toString()));
                     return it;
                 })
-                .map(it -> ResponseEntity.ok().body(it))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-    /* 사용자 본인 테스트 응답 저장 */
-    @Transactional
-    public Mono<ResponseEntity<TestAnswerDTO>> setAnswer(String id, TestAnswer testAnswer) {
-
-        log.info(String.format("[setAnswer] testAnswer=%s", testAnswer.toString()));
-
-        /* 1. 응답 저장 */
-        Mono<Profile> profile = profileRepository.findById(id)
-                .map(it -> {
-                    it.setTestAnswer(testAnswer);
-                    return it;
-                })
-                .flatMap(profileRepository::save);
-
-        return profile.map(it -> new TestAnswerDTO(it.getTestAnswer()))
                 .map(it -> ResponseEntity.ok().body(it))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

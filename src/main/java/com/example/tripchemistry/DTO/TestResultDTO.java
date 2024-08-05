@@ -2,7 +2,6 @@ package com.example.tripchemistry.DTO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.lang.Nullable;
 
@@ -31,12 +30,12 @@ public class TestResultDTO {
     
         private CharacterId characterId;
     
-        private Map<String, Float> city;
+        private List<String> cityGroup = new ArrayList<String>();
     
         public TestResult( 
             List<TripTag> tripTagList,
             CharacterId characterId,
-            Map<String, Float> city
+            List<String> cityGroup
         ){
             this.tripTagList = tripTagList.stream()
                 .map(
@@ -44,7 +43,7 @@ public class TestResultDTO {
                 )
                 .toList();
             this.characterId = characterId;
-            this.city = city;
+            this.cityGroup = cityGroup;
         }
 
         public TestResult( CharacterId characterId ){

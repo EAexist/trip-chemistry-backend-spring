@@ -1,7 +1,6 @@
 package com.example.tripchemistry.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import com.example.tripchemistry.DTO.TestAnswerDTO;
 import com.example.tripchemistry.types.ActivityTag;
 import com.example.tripchemistry.types.ExpectationTag;
-import com.mongodb.lang.Nullable;
 
 
 /* Test 응답 */
@@ -25,13 +23,12 @@ import com.mongodb.lang.Nullable;
 public class TestAnswer {
 
     /* Test Answers */   
-    private Map<String, List<Integer>> hashtag = new HashMap<String, List<Integer>>();
+    private Map<String, List<Integer>> hashtag;
 
-    @Nullable
     private int leadership;
-    private Map<String, Integer> schedule = new HashMap<>();
-    private Map<String, Integer> restaurant = new HashMap<>();
-    // private Map<String, Integer> city;
+    private Map<String, Integer> schedule;
+    private Map<String, Integer> restaurant;
+    private Map<String, Integer> city;
 
     // public TestAnswer(
     //     Map<String, List<Integer>> hashtag,
@@ -58,10 +55,10 @@ public class TestAnswer {
         // ).toList();
 
         this.hashtag = testAnswerDTO.getHashtag();
+        this.leadership = testAnswerDTO.getLeadership();
         this.schedule = testAnswerDTO.getSchedule();
         this.restaurant = testAnswerDTO.getRestaurant();
-        this.leadership = testAnswerDTO.getLeadership();
-        // this.city = testAnswerDTO.getCity();
+        this.city = testAnswerDTO.getCity();
     }
 
     

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripchemistry.DTO.ProfileDTO;
-import com.example.tripchemistry.DTO.TestAnswerDTO;
 import com.example.tripchemistry.DTO.TestResultDTO;
 import com.example.tripchemistry.model.TestAnswer;
 import com.example.tripchemistry.service.TestDataService;
@@ -38,17 +37,10 @@ class ProfileControllerReactive {
     // }    
     /* 테스트 응답 저장 */
     @PutMapping("/answer")
-    Mono<ResponseEntity<TestAnswerDTO>> setAnswer( @RequestParam("id") String id, @RequestBody TestAnswerDTO testAnswer ){
-        TestAnswer answer = new TestAnswer(testAnswer);
-        log.info("PUT /profile/answer?id=" + id +"testAnswer=" + answer.toString() );
-        return testService.setAnswer(id, new TestAnswer(testAnswer));
-    }    
-    /* 테스트 응답 저장 */
-    @PutMapping("/submitAnswer")
     Mono<ResponseEntity<ProfileDTO>> submitAnswer( @RequestParam("id") String id, @RequestBody TestAnswer testAnswer ){
         log.info("PUT /profile/answer?id=" + id );
         return testService.submitAnswer(id, testAnswer);
-    }   
+    }    
 
     /* 닉네임 수정 */
     @PutMapping("/setNickname")

@@ -82,15 +82,13 @@ public class AuthService {
     }
 
     @Transactional
-    public Mono<ResponseEntity<LoginResultDTO>> guestLogin(String id) {
+    public Mono<ResponseEntity<ProfileDTO>> guestLogin(String id) {
         log.info(String.format("[guestLogin]"));
 
         return profileRepository.findById(id)
                 .filter(profile -> profile.getAuthProvider() == AuthProvider.GUEST)
                 .flatMap(testDataService::profileToDTO)
-                .map(it -> new LoginResultDTO(it.getNickname() == null, it))
-				.map(it -> ResponseEntity.ok().body(it))
-				.defaultIfEmpty(ResponseEntity.badRequest().build());
+                .flatMap( it-> responseService.createResponseEntity(it, HttpStatus.NOT_FOUND));
     }
 
     @Transactional

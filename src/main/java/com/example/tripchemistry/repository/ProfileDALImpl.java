@@ -1,27 +1,25 @@
 package com.example.tripchemistry.repository;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.StringOperators;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.example.tripchemistry.model.Profile;
-import com.example.tripchemistry.model.answer.CityChemistry;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.UpdateResult;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class ProfileDALImpl implements ProfileDAL {
@@ -108,7 +106,7 @@ public class ProfileDALImpl implements ProfileDAL {
     public Flux<Profile> findAllTestResultWithNicknameById(List<String> idList) {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("id").in(idList)),
-                Aggregation.match(Criteria.where("testResult").exists(true)),
+                Aggregation.match(Criteria.where("testAnswer").exists(true)),
                 Aggregation.project("id")
                         // .and("nickname").as("nickname")
                         .and("testAnswer").as("testAnswer"));
@@ -117,26 +115,26 @@ public class ProfileDALImpl implements ProfileDAL {
 
     };
 
-//     public Mono<Map<String, Float>> getCityChemistry(List<String> idList) {
-//         log.info("[getCityChemistry] idList=" + String.join(",", idList.toArray(new String[idList.size()])));
+    public Mono<Map<String, Float>> getCityChemistry(List<String> idList) {
+        log.info("[getCityChemistry] idList=" + String.join(",", idList.toArray(new String[idList.size()])));
 
-//         Aggregation aggregation = Aggregation.newAggregation(
-//                 Aggregation.match(Criteria.where("id").in(idList)),
-//                 Aggregation.replaceRoot("testAnswer.city"),
-//                 Aggregation.group()
-//                         .avg("metropolis").as("metropolis")
-//                         .avg("history").as("history")
-//                         .avg("nature").as("nature")
-//                         .avg("small").as("small"),
-//                 Aggregation.project("metropolis", "history", "nature", "small"));
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("id").in(idList)),
+                Aggregation.replaceRoot("testAnswer.city"),
+                Aggregation.group()
+                        .avg("metropolis").as("metropolis")
+                        .avg("history").as("history")
+                        .avg("nature").as("nature")
+                        .avg("small").as("small"),
+                Aggregation.project("metropolis", "history", "nature", "small"));
 
-//         return (template.aggregate(aggregation, Profile.class, Map.class).next().map(it -> {
-//             return (((Map<String, Float>) it).entrySet().stream()
-//                     .filter(entry -> entry.getValue() != null)
-//                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-//         }));
+        return (template.aggregate(aggregation, Profile.class, Map.class).next().map(it -> {
+            return (((Map<String, Float>) it).entrySet().stream()
+                    .filter(entry -> entry.getValue() != null)
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        }));
 
-//     };
+    };
 
     // public Mono<CityResponse> getCityChemistry( List<String> idList ){
 

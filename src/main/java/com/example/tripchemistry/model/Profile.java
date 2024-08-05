@@ -34,7 +34,7 @@ public class Profile {
     private Boolean isSample = false;
     
     /* Basic Info */
-	private String nickname = null;
+	private String nickname;
     private String discriminator = "1";
 
     /* Auth */
@@ -82,11 +82,10 @@ public class Profile {
         this.authProvider = authProvider;
     }
 
-    public Profile(String id, String nickname, AuthProvider authProvider, boolean isSample, TestAnswer testAnswer ){
+    public Profile(String id, String nickname, boolean isSample, TestAnswer testAnswer ){
         this.id = id;
-        this.nickname = nickname;
-        this.authProvider = authProvider;
         this.isSample = isSample;
+        this.nickname = nickname;
         this.testAnswer = testAnswer;  
         // this.testResult = testResult;  
     }

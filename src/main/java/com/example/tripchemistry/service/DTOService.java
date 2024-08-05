@@ -1,8 +1,13 @@
 package com.example.tripchemistry.service;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.LinkedHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,24 +54,24 @@ public class DTOService {
 
         return profile.map(Optional::of)
                 .map(it -> it.map(Profile::getTestResult))
-                .map( it -> {
-                log.info("[TestDataService.getTestResultDTO] Profile::getTestResult returns "
-                + it.toString() );
-                return it;
-                })
+                // .map( it -> {
+                // log.info("[TestDataService.getTestResultDTO] Profile::getTestResult returns "
+                // + it.toString() );
+                // return it;
+                // })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map( it -> {
-                log.info("[TestDataService.getTestResultDTO] Optional::get returns " +
-                it.toString() );
-                return it;
-                })
+                // .map( it -> {
+                // log.info("[TestDataService.getTestResultDTO] Optional::get returns " +
+                // it.toString() );
+                // return it;
+                // })
                 .map(this::testResultToDTO)
-                .defaultIfEmpty(new TestResultDTO())
-        .map( it -> {
-        log.info("[TestDataService.getTestResultDTO] returns " + it.toString() );
-        return it;
-        });
+                .defaultIfEmpty(new TestResultDTO());
+        // .map( it -> {
+        // log.info("[TestDataService.getTestResultDTO] returns " + it.toString() );
+        // return it;
+        // });
     }
 
     public TestResultDTO getTestResultDTO(Profile profile) {
@@ -79,7 +84,7 @@ public class DTOService {
     private TestResultDTO testResultToDTO(TestResult testResult) {
 
         return new TestResultDTO(new TestResultDTO.TestResult(testResult.getTripTagList(), testResult.getCharacter_id(),
-                testResult.getCity()));
+                testResult.getCityGroup()));
     }
 
     private class ProfileDTOComparator implements Comparator<ProfileDTO> {

@@ -2,7 +2,6 @@ package com.example.tripchemistry.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.example.tripchemistry.types.CharacterId;
 import com.example.tripchemistry.types.TripTag;
@@ -28,5 +27,5 @@ public class TestResult {
 
     private CharacterId character_id;
 
-    private Map<String, Float> city;
+    private List<String> cityGroup = new ArrayList<String>();;
 }
