@@ -1,32 +1,6 @@
 server:
     port: 8080
     servlet:
-        encoding: # utf-8 encoding
+        encoding:
             charset: UTF-8
             force: true
-
-spring:
-    data:
-        mongodb: 
-            uri: mongodb+srv://admin:journeydoesn'tendhere@cluster-main.gjl7htp.mongodb.net/?retryWrites=true&w=majority
-            database: trip_chemistry
-    security: 
-        oauth2:
-            client:
-                provider:
-                    kakao:
-                        authorization-uri: https://kauth.kakao.com/oauth/authorize
-                        token-uri: https://kauth.kakao.com/oauth/token
-                        user-info-uri: https://kapi.kakao.com/v2/user/me
-                        user-name-attribute: id
-                registration:
-                    kakao:
-                        client-id: 364ccda1f706135a09a50f5521f9db63
-                        client-secret: pqUfRBkikSq2LCx7ScERPgRGxP9fHPOJ
-                        client-authentication-method: client_secret_post
-                        authorization-grant-type: authorization_code
-                        client-name: kakao
-                        scope:
-                        - profile_nickname
-                        # redirect-uri: https://eaexist.github.io/tripchemistry/login/kakaoAuthRedirect
-                        redirect-uri: http://localhost:3000/login/kakaoAuthRedirect
