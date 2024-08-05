@@ -1,0 +1,7 @@
+spring:
+    security: 
+        oauth2:
+            client:
+                registration:
+                    kakao:
+                        redirect-uri: https://trip-chemistry.vercel.app/login/kakaoAuthRedirect

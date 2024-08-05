@@ -1,0 +1,7 @@
+spring:
+    security:
+        oauth2:
+            client:
+                registration:
+                    kakao:
+                        redirect-uri: http://localhost:3000/login/kakaoAuthRedirect
