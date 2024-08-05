@@ -1,4 +1,4 @@
-# 여행 타입 테스트 (Trip Type Test)
+# 여행 타입 테스트 (Trip Type Test) Backend
  
  이 프로젝트는 여행 타입 테스트> 서비스의 백엔드입니다.
  
