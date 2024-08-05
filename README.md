@@ -12,7 +12,7 @@
 ## Stack
 - Spring 
 - Project Reactor
-- 
+  
   Reactive Stream 시스템으로 구현되었습니다.
 
 
@@ -25,9 +25,42 @@
 
 ## Development
 
-Build and run the server in development mode:
+To run the server, you need own MongoDB Server. You should provide valid URI and database name in src/main/resources/appliction-dev.yml as following. Otherwise, the server fails to run.
+
+```sh
+spring:
+    data:
+        mongodb: 
+            uri: # Your MongoDB URI
+            database: # Your MongoDB Database Name
+```
+
+
+
+Once you provided MongoDB URI and database name, build and run the server in development mode:
 
 ```sh
 gradle bootRun
 ```
 Open [http://localhost:8080](http://localhost:8080) to access the server in the browser.
+
+
+
+To use Kakao Login API, you should register and get your own API key in [Kakao Developers](https://developers.kakao.com/product/kakaoLogin). You should provide valid client id, client secret and redirect uri in src/main/resources/appliction-dev.yml as following. You can still run the server without registering and using Kakao API.
+
+```sh
+spring:
+    security: 
+        oauth2:
+            client:
+                registration:
+                    kakao:
+                        client-id: # Your Kakao API client id
+                        client-secret: # Your Kakao API client secret
+                        client-authentication-method: client_secret_post
+                        authorization-grant-type: authorization_code
+                        client-name: kakao
+                        scope:
+                        - profile_nickname
+                        redirect-uri: # Your Kakao API redirect-uri
+```
